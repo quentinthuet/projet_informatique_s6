@@ -95,7 +95,7 @@ bool complexe:: operator > (complexe x){
 
 bool complexe:: operator == (complexe x){
   bool res = false;
-  if(this->module() == x.module()) { res = true;}
+  if(abs((*this - x).module()) < 1e-8) { res = true;}
   return res;
 };
 

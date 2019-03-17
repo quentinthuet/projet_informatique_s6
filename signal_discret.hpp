@@ -10,9 +10,9 @@ class signal_discret{
   complexe * M_values;
   int M_size;
 public:
-  //constructeurs
+  //Constructeurs//
   signal_discret() : M_size(0), M_values(NULL) {
-    cout << "SD/constructeur dÃ©faut\n"; // debug
+    //    cout << "SD/constructeur dÃ©faut\n"; // debug
   }
   signal_discret(int size) : M_size(size) {
     M_values = new complexe[size];
@@ -20,46 +20,50 @@ public:
     for (int i = 0; i < size; i++){
       M_values[i] = c_init;
     }
-    //    cout << "SD/constructeur\n"; // debug
+    //    cout << "SD/constructeur taille\n"; // debug
   }
   signal_discret(const signal_discret & sd) : M_size(sd.M_size){
-    M_values = new complexe[M_size];
-    for (int i = 0; i < M_size; i++){
-      M_values[i] = sd.M_values[i];
+    if (sd.M_values != NULL){
+      M_values = new complexe[M_size];
+      for (int i = 0; i < M_size; i++){
+	M_values[i] = sd.M_values[i];
+      }
     }
+    else M_values = NULL;
     //    cout << "SD/constructeur copie\n"; // debug
   }
-  //destructeur
+  //Destructeur//
   ~signal_discret() {
     delete [] M_values;
     //    cout << "SD/destructeur\n"; // debug
   }
-  //accesseurs
+  //Accesseurs//
   int get_size();
   complexe get_value(int);
-  //mutateur
+  //Mutateur//
   void set_value(int,complexe);
-  //mÃ©thodes
+  //Méthodes élémentaires//
   signal_discret conjugue();
-  complexe * tfd();
   double energie();
-  signal_discret convolution(const signal_discret &);
-  signal_discret & translation(const int);
-  signal_discret & modulation(double);
-  //opÃ©rateurs
+  //Méthodes avancées//
+  complexe * tfd();
+  signal_discret convolution(signal_discret &);
+  signal_discret translation(const int);
+  signal_discret modulation(double);
+  //Opérateurs//
   signal_discret & operator=(const signal_discret &);
   signal_discret operator+(const signal_discret &);
   signal_discret operator*(const signal_discret &);
   signal_discret operator-(const signal_discret &);
   complexe operator,(const signal_discret &);
-  //testeurs
+  //Testeurs//
   int testu_1();
   int testu_2();
   int testu_3();
   void all_testu();
 };
 
-//fonctions externes
+//Fonctions externes//
 signal_discret tfd_inverse(complexe *, int);
 
 
