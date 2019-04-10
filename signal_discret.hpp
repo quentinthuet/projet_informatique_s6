@@ -12,7 +12,7 @@ class signal_discret{
 public:
   //Constructeurs//
   signal_discret() : M_size(0), M_values(NULL) {
-    //    cout << "SD/constructeur défaut\n"; // debug
+    //    cout << "SD/constructeur defaut\n"; // debug
   }
   signal_discret(int size) : M_size(size) {
     M_values = new complexe[size];

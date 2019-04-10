@@ -18,7 +18,8 @@ int signal_discret::get_size(){
 
 complexe signal_discret::get_value(int i){
   complexe res(0,0);
-  if (i < M_size && i >= 0) res = M_values[i];
+  if (i < M_size && i >= 0)
+    res = M_values[i];
   return M_values[i];
 }
 
@@ -28,7 +29,8 @@ complexe signal_discret::get_value(int i){
 
 void signal_discret::set_value(int i, complexe c){
   complexe zero(0,0);
-  if (i < M_size) M_values[i] = c; //1 //
+  if (i < M_size) //1
+    M_values[i] = c; //
   else {
     complexe * temp = new complexe[M_size]; //2
     for (int j = 0; j < M_size; j++){
@@ -86,19 +88,17 @@ complexe * signal_discret::tfd(){
 }
 
 signal_discret signal_discret::convolution(signal_discret & sd){
-  int size_max,size_min; //1
-  size_max = max(M_size, sd.M_size);
-  size_min = min(M_size, sd.M_size); 
-  bool this_is_max = (size_max == M_size); //
-  signal_discret res(size_max); //2 //
-  for (int n = 0; n < size_max; n++){ //3
-    for (int k = 0; k <= n; k++){
-      if (n - k < size_min){
-	if (this_is_max) res.set_value(n,res.get_value(n) + this->get_value(k)*sd.get_value(n - k));
-	else res.set_value(n,res.get_value(n) + sd.get_value(k)*this->get_value(n - k));
-      }
-    } 
-  } //
+  int size_max; //1
+  size_max = max(M_size, sd.M_size); //
+  signal_discret res(size_max); //2
+  for (int n = 0; n < size_max; n++) { //3
+    for (int k = 0; k < size_max; k++) { //
+      if (k >= M_size || (n - k) < 0 || (n - k) >= sd.M_size ) //4
+	continue; 
+      else
+	res.set_value(n,res.get_value(n) + this->get_value(k)*sd.get_value(n - k)); //
+    }
+  }
   return res;
 }
 
@@ -106,8 +106,10 @@ signal_discret signal_discret::translation(const int k0){
   signal_discret res(M_size);
   complexe zero(0,0);
   for (int k = 0; k < M_size; k++){ //1
-    if ((k - k0 >= 0) && (k - k0 < M_size)) res.M_values[k] = M_values[k - k0];
-    else res.M_values[k] = zero;
+    if ((k - k0 >= 0) && (k - k0 < M_size))
+      res.M_values[k] = M_values[k - k0];
+    else
+      res.M_values[k] = zero;
   } //
   return res;
 }
@@ -236,8 +238,10 @@ int signal_discret::testu_1(){ //test des constructeurs, destructeurs, accesseur
   bool test2 = (sd1.get_value(3) == c1); //
   sd1.set_value(3,c2); sd1.set_value(7,c2); //6
   bool test3 = (sd1.get_value(3) == c2 && sd1.get_value(6) == c1 && sd1.get_value(7) == c2 && sd1.get_size() == 8); //
-  if (test1 && test2 && test3) return 1;
-  else return 0;
+  if (test1 && test2 && test3)
+    return 1;
+  else
+    return 0;
 }
 
 int signal_discret::testu_2(){//test des opérateurs et des méthodes élémentaires
@@ -269,8 +273,10 @@ int signal_discret::testu_2(){//test des opérateurs et des méthodes élémenta
   complexe c9;
   c9 = (sd1,sd2);
   bool test7 = (c8 == c9); //
-  if (test1 && test2 && test3 && test4 && test5 && test6 && test7) return 1;
-  else return 0;
+  if (test1 && test2 && test3 && test4 && test5 && test6 && test7)
+    return 1;
+  else
+    return 0;
 }
 
 int signal_discret::testu_3(){ //test des méthodes avancées et de la transform�e inverse
@@ -304,8 +310,10 @@ int signal_discret::testu_3(){ //test des méthodes avancées et de la transform
   complexe ce(-1.27223251272,-1.838864985141), cf(-3.534457522041,-3.536609962222), cg(-5.796682531361,-5.234354939306), ch(-8.058907540682,-6.932099916384);
   bool test5 = (sd9.get_value(0) == ce && sd9.get_value(1) == cf && sd9.get_value(2) == cg && sd9.get_value(3) == ch);
   /************/
-  if (test1 && test2 && test3 && test4 && test5) return 1;
-  else return 0;
+  if (test1 && test2 && test3 && test4 && test5)
+    return 1;
+  else
+    return 0;
 }
   
 void signal_discret::all_testu(){
@@ -315,7 +323,7 @@ void signal_discret::all_testu(){
   nb_reussis += sd.testu_1();
   nb_reussis += sd.testu_2();
   nb_reussis += sd.testu_3();
-  cout << "SD/ " << nb_reussis << " tests sur " << nb_tests << " réussis\n";
+  cout << "SD/ " << nb_reussis << " tests sur " << nb_tests << " reussis\n";
 }
 
 
