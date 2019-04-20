@@ -5,9 +5,10 @@
 #include "signal_continu.hpp"
 using namespace std;
 
-complexe f_test1(complexe x) {
-  complexe c1(1.0,0.0);
-  return x * x - 2.0 * x + c1;
+complexe f_test1(double x) {
+  complexe c(x,0.0);
+  complexe c1(1.0,0.0), c2(2.0,0.0);
+  return c * c - c2 * c + c1;
 }
 
 

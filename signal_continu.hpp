@@ -9,7 +9,7 @@ using namespace std;
 
 class signal_continu {
   double t0, t1, eps, s;
-  complexe (*f)(complexe);
+  complexe (*f)(double);
 public:
   //Constructeurs//
   signal_continu() {
@@ -20,7 +20,7 @@ public:
     f = NULL;
     //    cout << "SC/constructeur defaut\n"; // debug
   }
-  signal_continu(complexe (*ff)(complexe)) {
+  signal_continu(complexe (*ff)(double)) {
     t0 = 0.0;
     t1 = 1.0;
     eps = 0.0;
@@ -50,14 +50,15 @@ public:
   void set_temps(double,double);
   void set_eps(double);
   void set_s(double);
-  void set_f(complexe (*)(complexe));
+  void set_f(complexe (*)(double));
   //Méthode élémentaire//
-  complexe eval_f(complexe);
+  complexe eval_f(double);
+  //Méthode avancée//
+  signal_discret echantillonage(int);
   //Testeurs
-  int testu_1(complexe (*)(complexe));
-  int testu_2();
-  int testu_3();
-  void all_testu(complexe (*)(complexe));
+  int testu_1(complexe (*)(double));
+  int testu_2(complexe (*)(double));
+  void all_testu(complexe (*)(double));
 };
 
 

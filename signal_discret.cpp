@@ -4,11 +4,6 @@
 #include "signal_discret.hpp"
 using namespace std;
 
-#ifndef M_PI
-  #define M_PI 3.14159265358979323846
-#endif
-
-
 
 //////////ACCESSEURS//////////
 
@@ -244,7 +239,7 @@ int signal_discret::testu_1(){ //test des constructeurs, destructeurs, accesseur
     return 0;
 }
 
-int signal_discret::testu_2(){//test des op√©rateurs et des m√©thodes √©l√©mentaires
+int signal_discret::testu_2(){//test des opÈrateurs et des mÈthodes ÈlÈmentaires
   signal_discret sd1(5);
   signal_discret sd2;
   complexe c1(5,6); //1
@@ -279,7 +274,7 @@ int signal_discret::testu_2(){//test des op√©rateurs et des m√©thodes √©l√©menta
     return 0;
 }
 
-int signal_discret::testu_3(){ //test des m√©thodes avanc√©es et de la transformÈe inverse
+int signal_discret::testu_3(){ //test des mÈthodes avancÈes et de la transformÈe inverse
   complexe zero(0,0);
   complexe c1(1,-2), c2(-3,4), c3(5,-6), c4(-7,8); //1
   signal_discret sd1(4);
@@ -290,26 +285,20 @@ int signal_discret::testu_3(){ //test des m√©thodes avanc√©es et de la transform
   signal_discret sd2 = tfd_inverse(tfd,4); //2
   bool test2 = (sd1.get_value(0) == sd2.get_value(0) && sd1.get_value(1) == sd2.get_value(1) && sd1.get_value(2) == sd2.get_value(2) && sd1.get_value(3) == sd2.get_value(3));
   delete [] tfd; //
-  /*CONVOLUTION*/
-  complexe ca(1,2), cb(3,4), cc(5,6), cd(7,8);
+  complexe ca(1,2), cb(3,4), cc(5,6), cd(7,8); //3
   signal_discret sda(2), sdb(2), sdc;
   sda.set_value(0,ca); sda.set_value(1,cb); sdb.set_value(0,cc); sdb.set_value(1,cd);
   sdc = sda.convolution(sdb);
   complexe caa(-7,16), cbb(-18,60);
-  bool test3 = (sdc.get_value(0) == caa && sdc.get_value(1) == cbb);
-  /*************/
-  /*TRANSLATION OK*/
-  signal_discret sd6(4), sd7, sd8;
+  bool test3 = (sdc.get_value(0) == caa && sdc.get_value(1) == cbb); //
+  signal_discret sd6(4), sd7, sd8; //4
   sd6.set_value(0,ca); sd6.set_value(1,cb); sd6.set_value(2,cc); sd6.set_value(3,cd);
   sd7 = sd6.translation(2); sd8 = sd6.translation(-1);
-  bool test4 = (sd7.get_value(0) == zero & sd7.get_value(1) == zero && sd7.get_value(2) == ca && sd7.get_value(3) == cb && sd8.get_value(0) == cb && sd8.get_value(1) == cc && sd8.get_value(2) == cd && sd8.get_value(3) == zero);
-  /****************/
-  /*MODULATION*/
-  signal_discret sd9;
+  bool test4 = (sd7.get_value(0) == zero & sd7.get_value(1) == zero && sd7.get_value(2) == ca && sd7.get_value(3) == cb && sd8.get_value(0) == cb && sd8.get_value(1) == cc && sd8.get_value(2) == cd && sd8.get_value(3) == zero); //
+  signal_discret sd9; //5
   sd9 = sd6.modulation(3);
   complexe ce(-1.27223251272,-1.838864985141), cf(-3.534457522041,-3.536609962222), cg(-5.796682531361,-5.234354939306), ch(-8.058907540682,-6.932099916384);
-  bool test5 = (sd9.get_value(0) == ce && sd9.get_value(1) == cf && sd9.get_value(2) == cg && sd9.get_value(3) == ch);
-  /************/
+  bool test5 = (sd9.get_value(0) == ce && sd9.get_value(1) == cf && sd9.get_value(2) == cg && sd9.get_value(3) == ch); //
   if (test1 && test2 && test3 && test4 && test5)
     return 1;
   else
