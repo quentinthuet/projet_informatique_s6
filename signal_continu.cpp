@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <random>
 #include "complexe.hpp"
 #include "signal_discret.hpp"
 #include "signal_continu.hpp"
@@ -50,19 +51,20 @@ complexe signal_continu::eval_f(double x) {
 
 /////////METHODE AVANCEE//////////
 
-signal_discret signal_continu::echantillonage(int n) {
+signal_discret signal_continu::echantillonnage(int n, bool fenetrage) {
   double r = 1000.0;
   signal_discret res(n);
-  double tcourant = t0;
-  complexe valcourant;
+  double tcourant = t0, valcourant, gcourant;
+  default_random_engine generator;
   for (int i = 0; i < n; i++) {
     tcourant = (double) i / (double) n * (t1 - t0) + t0;
-    //complexe gcourant((1.0/2.0*tanh(-r*(tcourant-s*(t1-t0)))+1.0/2.0)*(1.0/2.0*tanh(r*(tcourant+s*(t1-t0)))+1.0/2.0),0.0);
-    complexe bruitcourant(1.0 + (rand()%2 * 2 - 1) * eps * ((double) (rand()%100)/100.0),0.0);
-    valcourant = f(tcourant) * bruitcourant /* * gcourant*/;
-    // - debug    cout << "f[" << tcourant << "] = " << valcourant << endl;
-    // - debug    cout << "bruit[" << i << "] = " << bruitcourant << endl;
-    res.set_value(i,valcourant);
+    normal_distribution<double> distribution(f(tcourant).module(),eps);
+    gcourant = (1.0/2.0*tanh(-r*(tcourant-s*(t1-t0)))+1.0/2.0)*(1.0/2.0*tanh(r*(tcourant+s*(t1-t0)))+1.0/2.0);
+    valcourant = distribution(generator);
+    if (fenetrage)
+      valcourant = valcourant * gcourant;
+    complexe cvalcourant(valcourant,0.0);
+    res.set_value(i,cvalcourant);
   }
   return res;
 }
@@ -83,40 +85,32 @@ int signal_continu::testu_1(complexe (*f_test)(double)) {
     return 0;
 }
 
-int signal_continu::testu_2(complexe(*f_test)(double)) {
+void signal_continu::testu_2(complexe(*f_test)(double)) {
   signal_continu sc1(f_test);
   int n = 1000;
   signal_discret sd1, sd2(n);
   complexe * tfd;
-  double fonda = 1.0;
   double T = 1.0/50.0;
-  sc1.set_temps(0.0,1.0); sc1.set_eps(0.0); sc1.set_s(1.0); sc1.set_f(f_test);
-  sd1 = sc1.echantillonage(n);
+  sc1.set_temps(0.0,T); sc1.set_eps(0.1); sc1.set_s(0.1); sc1.set_f(f_test);
+  sd1 = sc1.echantillonnage(n, false);
   sd1.sortie_fichier_time(1,0.0,T*(1.0-1.0/n));
   sc1.set_temps(0.0,10*T);
-  sd1 = sc1.echantillonage(n);
+  sd1 = sc1.echantillonnage(n, false);
   tfd = sd1.tfd();
   for (int i = 0; i < n; i++) {
-    //  cout << tfd[i] << endl;
     sd2.set_value(i,tfd[i]);
   }
   sd2.sortie_fichier_freq(1,0.0,10*T,true);
-  /* for (int i = 0; i < 100; i++) {
-    cout << sd1.get_value(i) << endl;
-    }*/
   delete [] tfd;
-  if (1)
-    return 1;
-  else
-    return 0;
+  cout << "SC/ signal_time_1 et son spectre signal_freq_1 est l'echantillonnage de la fonction x |-> 5+0.5cos(300PIx)+0.5cos(600PIx+PI/2)+0.5cos(900PIx+PI/4)+0.05cos(6000PIx) en 1000 points de sa periode (0.020)\n";
 }
 
 void signal_continu::all_testu(complexe (*f_test)(double)) {
   signal_continu sc;
-  int nb_tests = 2;
+  int nb_tests = 1;
   int nb_reussis = 0;
   nb_reussis += sc.testu_1(f_test);
-  nb_reussis += sc.testu_2(f_test);
-  cout << "SC/ " << nb_reussis << " tests sur " << nb_tests << " reussis\n";
+  cout << "SC/ " << nb_reussis << " test sur " << nb_tests << " reussi\n";
+  sc.testu_2(f_test);
 }
 
