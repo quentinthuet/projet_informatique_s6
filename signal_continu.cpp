@@ -56,12 +56,12 @@ signal_discret signal_continu::echantillonage(int n) {
   double tcourant = t0;
   complexe valcourant;
   for (int i = 0; i < n; i++) {
-    tcourant = (double) i / (double) (n - 1) * (t1 - t0) + t0;
-    complexe gcourant((1.0/2.0*tanh(-r*(tcourant-s*(t1-t0)))+1.0/2.0)*(1.0/2.0*tanh(r*(tcourant+s*(t1-t0)))+1.0/2.0),0.0);
-    complexe bruitcourant(1.0 + eps * ((double) (rand()%100)/100.0),0.0);
-    valcourant = f(tcourant) * bruitcourant * gcourant;
-    cout << "f[" << tcourant << "] = " << valcourant << endl;
-    cout << "bruit[" << i << "] = " << bruitcourant << endl;
+    tcourant = (double) i / (double) n * (t1 - t0) + t0;
+    //complexe gcourant((1.0/2.0*tanh(-r*(tcourant-s*(t1-t0)))+1.0/2.0)*(1.0/2.0*tanh(r*(tcourant+s*(t1-t0)))+1.0/2.0),0.0);
+    complexe bruitcourant(1.0 + (rand()%2 * 2 - 1) * eps * ((double) (rand()%100)/100.0),0.0);
+    valcourant = f(tcourant) * bruitcourant /* * gcourant*/;
+    // - debug    cout << "f[" << tcourant << "] = " << valcourant << endl;
+    // - debug    cout << "bruit[" << i << "] = " << bruitcourant << endl;
     res.set_value(i,valcourant);
   }
   return res;
@@ -85,12 +85,26 @@ int signal_continu::testu_1(complexe (*f_test)(double)) {
 
 int signal_continu::testu_2(complexe(*f_test)(double)) {
   signal_continu sc1(f_test);
-  signal_discret sd1;
-  sc1.set_temps(-3.0,4.12); sc1.set_eps(0.001); sc1.set_s(0.1); sc1.set_f(f_test);
-  sd1 = sc1.echantillonage(100);
+  int n = 1000;
+  signal_discret sd1, sd2(n);
+  complexe * tfd;
+  double fonda = 1.0;
+  double T = 1.0/50.0;
+  sc1.set_temps(0.0,1.0); sc1.set_eps(0.0); sc1.set_s(1.0); sc1.set_f(f_test);
+  sd1 = sc1.echantillonage(n);
+  sd1.sortie_fichier_time(1,0.0,T*(1.0-1.0/n));
+  sc1.set_temps(0.0,10*T);
+  sd1 = sc1.echantillonage(n);
+  tfd = sd1.tfd();
+  for (int i = 0; i < n; i++) {
+    //  cout << tfd[i] << endl;
+    sd2.set_value(i,tfd[i]);
+  }
+  sd2.sortie_fichier_freq(1,0.0,10*T,true);
   /* for (int i = 0; i < 100; i++) {
     cout << sd1.get_value(i) << endl;
     }*/
+  delete [] tfd;
   if (1)
     return 1;
   else

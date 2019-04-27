@@ -4,6 +4,40 @@
 #include "signal_discret.hpp"
 using namespace std;
 
+void signal_discret::sortie_fichier_time(int nb, double t0, double t1) {
+  char string[255];
+  FILE *fileresult = NULL;
+  int i;
+  double dt = 0.0, time;
+  sprintf(string, "%s%d", "signal_time_", nb);
+  fileresult = fopen(string, "w");
+  dt = (t1 - t0) / (double) (M_size - 1);
+  time = t0;
+  for (int i = 0; i < M_size; i++) {
+    fprintf(fileresult, "%e %e\n", time, M_values[i].module());
+    time += dt;
+  }
+  fclose(fileresult);
+}
+
+void signal_discret::sortie_fichier_freq(int nb, double t0, double t1, bool log_on) {
+  char string[255];
+  FILE *fileresult = NULL;
+  int i;
+  double w = 0.0, freq;
+  sprintf(string, "%s%d", "signal_freq_", nb);
+  fileresult = fopen(string, "w");
+  w = 1.0 / (t1 - t0);
+  freq = w;
+  for (int i = 1; i < M_size/2; i++) {
+    if (log_on)
+      fprintf(fileresult, "%e %e\n", freq, log(M_values[i].module()));
+    else
+      fprintf(fileresult, "%e %e\n", freq, (M_values[i].module()));
+    freq += w;
+  }
+  fclose(fileresult);
+}
 
 //////////ACCESSEURS//////////
 
@@ -15,7 +49,7 @@ complexe signal_discret::get_value(int i){
   complexe res(0,0);
   if (i < M_size && i >= 0)
     res = M_values[i];
-  return M_values[i];
+  return res;
 }
 
 
@@ -85,7 +119,7 @@ complexe * signal_discret::tfd(){
 signal_discret signal_discret::convolution(signal_discret & sd){
   int size_max; //1
   size_max = max(M_size, sd.M_size); //
-  signal_discret res(size_max); //2
+  signal_discret res(size_max); //2 //
   for (int n = 0; n < size_max; n++) { //3
     for (int k = 0; k < size_max; k++) { //
       if (k >= M_size || (n - k) < 0 || (n - k) >= sd.M_size ) //4
@@ -279,6 +313,7 @@ int signal_discret::testu_3(){ //test des méthodes avancées et de la transformée
   complexe c1(1,-2), c2(-3,4), c3(5,-6), c4(-7,8); //1
   signal_discret sd1(4);
   sd1.set_value(0,c1); sd1.set_value(1,c2); sd1.set_value(2,c3); sd1.set_value(3,c4);
+  sd1.sortie_fichier_time(1,0.0,3.0);
   complexe c5(-4,4), c6(-8,0), c7(16,-20), c8(0,8);
   complexe * tfd = sd1.tfd();
   bool test1 = (tfd[0] == c5 && tfd[1] == c6 && tfd[2] == c7 && tfd[3] == c8); //

@@ -37,6 +37,8 @@ public:
     delete [] M_values;
     //    cout << "SD/destructeur\n"; // debug
   }
+  void sortie_fichier_time(int,double,double);
+  void sortie_fichier_freq(int,double,double,bool);
   //Accesseurs//
   int get_size();
   complexe get_value(int);
