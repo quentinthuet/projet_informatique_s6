@@ -13,6 +13,7 @@ protected:
   signal_discret signal_apply, signal_filtre;
   double duree, freq_coupe;
 public:
+  //Constructeurs//
   filtre() {
     duree = 1.0;
     freq_coupe = 0.0;
@@ -31,23 +32,28 @@ public:
     freq_coupe = f.freq_coupe;
     //    cout << "F/constructeur copie\n"; // debug
   }
+  //Destructeur//
   ~filtre() {
     //    cout << "F/destructeur\n"; // debug
   }
-  void set_duree(double);
-  void set_signal_apply(signal_discret);
-  void set_signal_filtre(signal_discret);
-  void set_freq_coupe(double);
+  //Accesseurs//
   double get_duree();
   signal_discret get_signal_apply();
   signal_discret get_signal_filtre();
   double get_freq_coupe();
+  //Mutateurs//
+  void set_duree(double);
+  void set_signal_apply(signal_discret);
+  void set_signal_filtre(signal_discret);
+  void set_freq_coupe(double);
+  //Methodes//
   void apply();
   virtual void construct() = 0;
 };
 
 class passe_bas_ideal : public filtre {
 public:
+  //Constructeurs//
   passe_bas_ideal() {
     //    cout << "F/PBI/constructeur defaut\n"; // debug
   }
@@ -57,12 +63,19 @@ public:
   passe_bas_ideal(const passe_bas_ideal & pbi) : filtre(pbi) {
     //    cout << "F/PBI/constructeur par copie\n"; // debug
   }
+  //Destructeur//
+  ~passe_bas_ideal() {
+    //    cout << "F/PBI/destructeur\n"; // debug
+  }
+  //Methode//
   void construct();
+  //Test//
   void test(complexe (*)(double));
 };
 
 class passe_haut_ideal : public filtre {
-  public:
+public:
+  //Constructeurs//
   passe_haut_ideal() {
     //    cout << "F/PHI/constructeur defaut\n"; // debug
   }
@@ -72,12 +85,19 @@ class passe_haut_ideal : public filtre {
   passe_haut_ideal(const passe_haut_ideal & phi) : filtre(phi) {
     //    cout << "F/PHI/constructeur par copie\n"; // debug
   }
+  //Destructeur//
+  ~passe_haut_ideal() {
+    //    cout << "F/PHI/destructeur\n"; // debug
+  }
+  //Methode//
   void construct();
+  //Test//
   void test(complexe (*)(double));
 };
 
 class passe_bas_ordre_1 : public filtre {
 public:
+  //Constructeurs//
   passe_bas_ordre_1() {
     //    cout << "F/PBO1/constructeur defaut\n"; // debug
   }
@@ -87,12 +107,19 @@ public:
   passe_bas_ordre_1(const passe_bas_ordre_1 & pbo1) : filtre(pbo1) {
     //    cout << "F/PBO1/constructeur par copie\n"; // debug
   }
+  //Destructeur//
+  ~passe_bas_ordre_1() {
+    //    cout << "F/PBO1/destructeur\n"; // debug
+  }
+  //Methode//
   void construct();
+  //Test//
   void test(complexe (*)(double));
 };
 
 class passe_haut_ordre_1 : public filtre {
 public:
+  //Constructeurs//
   passe_haut_ordre_1() {
     //    cout << "F/PHO1/constructeur defaut\n"; // debug
   }
@@ -102,10 +129,17 @@ public:
   passe_haut_ordre_1(const passe_haut_ordre_1 & pho1) : filtre(pho1) {
     //    cout << "F/PHO1/constructeur par copie\n"; // debug
   }
+  //Destructeur//
+  ~passe_haut_ordre_1() {
+    //    cout << "F/PHO1/destructeur\n"; // debug
+  }
+  //Methode//
   void construct();
+  //Test//
   void test(complexe (*)(double));
 };
 
+//Testeur//
 void filtre_all_testu(complexe (*)(double));
 
 #endif

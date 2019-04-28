@@ -37,6 +37,7 @@ public:
     delete [] M_values;
     //    cout << "SD/destructeur\n"; // debug
   }
+  //Fonctions de sortie de donnees//
   void sortie_fichier_time(int,double,double);
   void sortie_fichier_freq(int,double,double,bool);
   //Accesseurs//
@@ -65,7 +66,7 @@ public:
   void all_testu();
 };
 
-//Fonctions externes//
+//Fonction externe//
 signal_discret tfd_inverse(complexe *, int);
 
 

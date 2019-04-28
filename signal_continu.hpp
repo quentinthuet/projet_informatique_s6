@@ -55,7 +55,7 @@ public:
   complexe eval_f(double);
   //Méthode avancée//
   signal_discret echantillonnage(int,bool);
-  //Testeurs
+  //Testeurs//
   int testu_1(complexe (*)(double));
   void testu_2(complexe (*)(double));
   void all_testu(complexe (*)(double));

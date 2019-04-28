@@ -7,28 +7,10 @@
 
 using namespace std;
 
-void filtre_all_testu(complexe (*f_test)(double)) {
-  passe_bas_ideal pbi;
-  pbi.test(f_test);
-  passe_haut_ideal phi;
-  phi.test(f_test);
-  passe_bas_ordre_1 pbo1;
-  pbo1.test(f_test);
-  passe_haut_ordre_1 pho1;
-  pho1.test(f_test);
-}
 
-void filtre::set_duree(double nduree) {
-  duree = nduree;
-}
+/***************FILTRE***************/
 
-void filtre::set_signal_apply(signal_discret nsignal_apply) {
-  signal_apply = nsignal_apply;
-}
-
-void filtre::set_signal_filtre(signal_discret nsignal_filtre) {
-  signal_filtre = nsignal_filtre;
-}
+/////////ACCESSEURS//////////
 
 double filtre::get_duree() {
   return duree;
@@ -42,21 +24,18 @@ signal_discret filtre::get_signal_filtre() {
   return signal_filtre;
 }
 
-void filtre::apply() {
-  complexe * tfd;
-  int size = signal_apply.get_size();
-  signal_discret spectre(size), spectre_filtre(size);
-  tfd = signal_apply.tfd();
-  for (int i = 0; i < size; i++) {
-    spectre.set_value(i,tfd[i]);
-  }
-  spectre_filtre = spectre * signal_filtre;
-  complexe values_spectre_filtre[size];
-  for (int i = 0; i < size; i++) {
-    values_spectre_filtre[i] = spectre_filtre.get_value(i);
-  }
-  signal_apply = tfd_inverse(values_spectre_filtre,size);
-  delete [] tfd;
+/////////MUTATEURS//////////
+
+void filtre::set_duree(double nduree) {
+  duree = nduree;
+}
+
+void filtre::set_signal_apply(signal_discret nsignal_apply) {
+  signal_apply = nsignal_apply;
+}
+
+void filtre::set_signal_filtre(signal_discret nsignal_filtre) {
+  signal_filtre = nsignal_filtre;
 }
 
 void filtre::set_freq_coupe(double n_freq_coupe) {
@@ -67,12 +46,36 @@ double filtre::get_freq_coupe() {
   return freq_coupe;
 }
 
+/////////METHODE//////////
+
+void filtre::apply() {
+  int size = signal_apply.get_size(); //1
+  complexe * tfd; 
+  complexe values_spectre_filtre[size]; 
+  signal_discret spectre(size), spectre_filtre(size); //
+  tfd = signal_apply.tfd(); //2
+  for (int i = 0; i < size; i++) {
+    spectre.set_value(i,tfd[i]);
+  } 
+  delete [] tfd; //
+  spectre_filtre = spectre * signal_filtre; //3 //
+  for (int i = 0; i < size; i++) { //4
+    values_spectre_filtre[i] = spectre_filtre.get_value(i);
+  } //
+  signal_apply = tfd_inverse(values_spectre_filtre,size); //5 //
+}
+
+
+/***************PASSE-BAS IDEAL***************/
+
+//////////METHODE//////////
+
 void passe_bas_ideal::construct() {
-  int size = signal_apply.get_size();
-  double w = 1.0 / duree;
-  double freq_p = w;
-  complexe c1(1.0,0.0), c0(0.0001,0.0);
-  for (int i = 0; i < size/2; i++) {
+  int size = signal_apply.get_size(); //1 //
+  double w = 1.0 / duree; //2
+  double freq_p = w; //
+  complexe c1(1.0,0.0), c0(0.0001,0.0); //3 
+  for (int i = 0; i < size/2; i++) { 
     if (freq_p < freq_coupe) {
       signal_filtre.set_value(i,c1);
       signal_filtre.set_value(size - 1 - i, c1);
@@ -82,8 +85,10 @@ void passe_bas_ideal::construct() {
       signal_filtre.set_value(size - 1 - i, c0);
     }
     freq_p += w;
-  }
+  } //
 }
+
+//////////TEST//////////
 
 void passe_bas_ideal::test(complexe (*f_test)(double)) {
   signal_continu sc1(f_test);
@@ -114,6 +119,11 @@ void passe_bas_ideal::test(complexe (*f_test)(double)) {
   cout << "F/PBI/test effectue, signal_time_21 de spectre signal_freq_21 est le resultat du filtrage passe-bas de signal_time_2 de spectre signal_freq_2 a 600Hz\n"; 
 }
 
+
+/***************PASSE-HAUT IDEAL***************/
+
+//////////METHODE//////////
+
 void passe_haut_ideal::construct() {
   int size = signal_apply.get_size();
   double w = 1.0 / duree;
@@ -131,6 +141,8 @@ void passe_haut_ideal::construct() {
     freq_p += w;
   }
 }
+
+//////////TEST//////////
 
 void passe_haut_ideal::test(complexe (*f_test)(double)) {
   signal_continu sc1(f_test);
@@ -161,17 +173,24 @@ void passe_haut_ideal::test(complexe (*f_test)(double)) {
   cout << "F/PHI/test effectue, signal_time_31 de spectre signal_freq_31 est le resultat du filtrage passe-haut de signal_time_3 de spectre signal_freq_3 a 2000Hz\n";
 }
 
+
+/***************PASSE-BAS 1er ORDRE***************/
+
+//////////METHODE//////////
+
 void passe_bas_ordre_1::construct() {
-  int size = signal_apply.get_size();
-  double w = 1.0 / duree;
-  double freq_p = w;
-  for (int i = 0; i < size/2; i++) {
+  int size = signal_apply.get_size(); //1 //
+  double w = 1.0 / duree; //2
+  double freq_p = w; //
+  for (int i = 0; i < size/2; i++) { //3
     complexe temp(1.0/sqrt(1.0+(freq_p/freq_coupe)*(freq_p/freq_coupe)),0.0);
     signal_filtre.set_value(i,temp);
     signal_filtre.set_value(size - 1 - i, temp);
     freq_p += w;
-  }
+  } //
 }
+
+//////////TEST//////////
 
 void passe_bas_ordre_1::test(complexe (*f_test)(double)) {
   signal_continu sc1(f_test);
@@ -202,6 +221,11 @@ void passe_bas_ordre_1::test(complexe (*f_test)(double)) {
   cout << "F/PBO1/test effectue, signal_time_41 de spectre signal_freq_41 est le resultat du filtrage passe-bas de signal_time_4 de spectre signal_freq_4 a 600Hz\n";
 }
 
+
+/***************PASSE-HAUT 1er ORDRE***************/
+
+//////////METHODE//////////
+
 void passe_haut_ordre_1::construct() {
   int size = signal_apply.get_size();
   double w = 1.0 / duree;
@@ -215,6 +239,9 @@ void passe_haut_ordre_1::construct() {
     freq_p += w;
   }
 }
+
+
+//////////TEST//////////
 
 void passe_haut_ordre_1::test(complexe (*f_test)(double)) {
   signal_continu sc1(f_test);
@@ -244,4 +271,22 @@ void passe_haut_ordre_1::test(complexe (*f_test)(double)) {
   delete [] tfd;  
   cout << "F/PHO2/test effectue, signal_time_51 de spectre signal_freq_51 est le resultat du filtrage passe-haut de signal_time_5 de spectre signal_freq_5 a 2000Hz\n";
 }
+
+
+/***************FONCTION HORS CLASSE***************/
+
+//////////TESTEUR//////////
+
+void filtre_all_testu(complexe (*f_test)(double)) {
+  passe_bas_ideal pbi;
+  pbi.test(f_test);
+  passe_haut_ideal phi;
+  phi.test(f_test);
+  passe_bas_ordre_1 pbo1;
+  pbo1.test(f_test);
+  passe_haut_ordre_1 pho1;
+  pho1.test(f_test);
+}
+
+
 
