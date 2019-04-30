@@ -2,8 +2,8 @@ CC = g++
 CFLAGS = -Wall
 EXEC_NAME = run
 EXEC_NAME2 = tests
-OBJ_FILES = main.o complexe.o signal_discret.o signal_continu.o filtre.o
-TEST_FILES = tests_units.o complexe.o signal_discret.o signal_continu.o filtre.o
+OBJ_FILES = main.o complexe.o signal_discret.o signal_continu.o filtre.o signal_discret_stl.o
+TEST_FILES = tests_units.o complexe.o signal_discret.o signal_continu.o filtre.o signal_discret_stl.o
 
 all : $(EXEC_NAME)
 

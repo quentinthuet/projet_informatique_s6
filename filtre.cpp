@@ -272,7 +272,7 @@ void passe_haut_ordre_1::test(complexe (*f_test)(double)) {
   cout << "F/PHO1/test effectue, signal_time_51 de spectre signal_freq_51 est le resultat du filtrage passe-haut de signal_time_5 de spectre signal_freq_5 a 2000Hz\n";
 }
 
-/***************PASSE-HAUT 2eme ORDRE***************/
+/***************PASSE-BAS 2eme ORDRE***************/
 
 //////////METHODE//////////
 
