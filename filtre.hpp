@@ -139,6 +139,73 @@ public:
   void test(complexe (*)(double));
 };
 
+
+class passe_bas_ordre_2 : public filtre {
+public:
+  //Constructeurs//
+  passe_bas_ordre_2() {
+    //    cout << "F/PBO2/constructeur defaut\n"; // debug
+  }
+  passe_bas_ordre_2(signal_discret nsignal_apply,double freq_coupe, double duree) : filtre(nsignal_apply, freq_coupe, duree) {
+    //    cout << "F/PBO2/constructeur par signal_apply, frequence de coupure et duree\n"; // debug
+  }
+  passe_bas_ordre_2(const passe_bas_ordre_2 & pbo2) : filtre(pbo2) {
+    //    cout << "F/PBO2/constructeur par copie\n"; // debug
+  }
+  //Destructeur//
+  ~passe_bas_ordre_2() {
+    //    cout << "F/PBO2/destructeur\n"; // debug
+  }
+  //Methode//
+  void construct();
+  //Test//
+  void test(complexe (*)(double));
+};
+
+class passe_haut_ordre_2 : public filtre {
+public:
+  //Constructeurs//
+  passe_haut_ordre_2() {
+    //    cout << "F/PHO2/constructeur defaut\n"; // debug
+  }
+  passe_haut_ordre_2(signal_discret nsignal_apply,double freq_coupe, double duree) : filtre(nsignal_apply, freq_coupe, duree) {
+    //    cout << "F/PHO2/constructeur par signal_apply, frequence de coupure et duree\n"; // debug
+  }
+  passe_haut_ordre_2(const passe_haut_ordre_2 & pho2) : filtre(pho2) {
+    //    cout << "F/PHO2/constructeur par copie\n"; // debug
+  }
+  //Destructeur//
+  ~passe_haut_ordre_2() {
+    //    cout << "F/PHO2/destructeur\n"; // debug
+  }
+  //Methode//
+  void construct();
+  //Test//
+  void test(complexe (*)(double));
+};
+
+class coupe_bande_ideal : public passe_bas_ideal, public passe_haut_ideal {
+public:
+  //Constructeurs//
+  coupe_bande_ideal() : passe_bas_ideal(), passe_haut_ideal() {
+    //    cout << "F/CBI/constructeur defaut\n"; // debug
+  }
+  coupe_bande_ideal(signal_discret nsignal_apply,double freq_coupe_bas, double freq_coupe_haut, double duree) :  passe_bas_ideal(nsignal_apply, freq_coupe_bas, duree), passe_haut_ideal(nsignal_apply, freq_coupe_haut, duree) {
+    //    cout << "F/CBI/constructeur par signal_apply, frequence de coupure basse et haute et duree\n"; // debug
+  }
+  coupe_bande_ideal(const coupe_bande_ideal & cbi) : passe_bas_ideal(cbi), passe_haut_ideal(cbi) {
+    //    cout << "F/CBI/constructeur par copie\n"; // debug
+  }
+  //Destructeur//
+  ~coupe_bande_ideal() {
+    //    cout << "F/CBI/destructeur\n"; // debug
+  }
+  //Methode//
+  void construct();
+  //Test//
+  void test(complexe (*)(double));
+};
+
 //Testeur//
 void filtre_all_testu(complexe (*)(double));
 
