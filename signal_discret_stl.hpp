@@ -50,6 +50,8 @@ public:
   signal_discret_stl operator*(const signal_discret_stl &);
   signal_discret_stl operator-(const signal_discret_stl &);
   complexe operator,(const signal_discret_stl &);
+  //Fonction amie//
+  friend signal_discret_stl tfd_inverse_stl(complexe*,int);
   //Testeurs//
   int testu_1();
   int testu_2();
@@ -58,7 +60,7 @@ public:
 };
 
 //Fonction externe//
-signal_discret_stl tfd_inverse_stl(complexe *, int);
+signal_discret_stl tfd_inverse_stl(complexe*,int);
 
 
 
