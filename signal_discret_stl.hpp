@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "complexe.hpp"
+#include "signal_discret.hpp"
 using namespace std;
 
 class signal_discret_stl{
@@ -46,6 +47,7 @@ public:
   signal_discret_stl modulation(double);
   //Opérateurs//
   signal_discret_stl & operator=(const signal_discret_stl &);
+  signal_discret_stl & operator=(const signal_discret &);
   signal_discret_stl operator+(const signal_discret_stl &);
   signal_discret_stl operator*(const signal_discret_stl &);
   signal_discret_stl operator-(const signal_discret_stl &);

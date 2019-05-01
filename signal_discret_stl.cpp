@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include "complexe.hpp"
+#include "signal_discret.hpp"
 #include "signal_discret_stl.hpp"
 using namespace std;
 
@@ -171,6 +172,16 @@ signal_discret_stl tfd_inverse_stl(complexe * c_tab, const int size){
 signal_discret_stl & signal_discret_stl::operator=(const signal_discret_stl & sds){
   if (&sds != this){ //1 //
     M_values = sds.M_values;
+  }
+  return *this;
+}
+
+signal_discret_stl & signal_discret_stl::operator=(const signal_discret & sd){
+  signal_discret temp = sd;
+  int size = temp.get_size();
+  M_values.clear();
+  for (int i = 0; i < size; i++) {
+    M_values.push_back(temp.get_value(i));
   }
   return *this;
 }

@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <ctime>
 #include "complexe.hpp"
 #include "signal_discret.hpp"
 #include "signal_discret_stl.hpp"
@@ -13,13 +14,16 @@ complexe f_test1(double x) {
 }
 
 
-int main(){/*
+int main(){
   signal_discret sd;
-  sd.all_testu();*/
+  sd.all_testu();
   signal_discret_stl sds;
-  sds.all_testu();/*
+  sds.all_testu();
   signal_continu sc;
   sc.all_testu(f_test1);
-  filtre_all_testu(f_test1);*/
+  cout << "--- signal_discret ---" << endl;
+  filtre_all_testu<signal_discret>(f_test1);
+  cout << "--- signal_discret_stl ---" << endl;
+  filtre_all_testu<signal_discret_stl>(f_test1);
   return 0;
 }
